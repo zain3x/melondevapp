@@ -1,7 +1,16 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div fxFlex="100" fxLayout="row">
-  <div fxFlex="20">[Project Folder]</div>
-  <div fxFlex>[Text Code Editor]</div>
-  <!-- <button (click)="launchWindow()">Launch Coursetro</button> -->
+<div class="fullframe" fxLayout="row">
+  <div fxFlex="20" fxLayout="column">
+    <button fxFlex="20px" (click)="openProjectDialog()">Open Project</button>
+    <div>
+      {{projectDirectory}}
+    </div>
+  </div>
+  <div fxFlex fxLayout="column">
+    <button fxFlex="20px" (click)="openFileDialog()">Open File</button>
+    <div *ngIf="codeContent" fxFlex>
+      <codemirror [(ngModel)]="codeContent" [config]="codeConfig"></codemirror>
+    </div>
+  </div>
 </div>
 

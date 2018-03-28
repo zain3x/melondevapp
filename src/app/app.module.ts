@@ -1,7 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxElectronModule } from 'ngx-electron';
+import { NgxFsModule } from 'ngx-fs';
+import { CodemirrorModule } from 'ng2-codemirror';
 import { AppComponent } from './app.component';
 
 
@@ -12,7 +15,10 @@ import { AppComponent } from './app.component';
   imports: [
     FlexLayoutModule,
     BrowserModule,
-    NgxElectronModule
+    FormsModule,
+    NgxElectronModule,
+    CodemirrorModule,
+    NgxFsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
