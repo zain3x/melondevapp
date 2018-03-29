@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { CodeMirror } from 'codemirror';
-import { CodemirrorComponent } from 'ng2-codemirror';
 import { ElectronService } from 'ngx-electron';
 import { FsService } from 'ngx-fs';
 
@@ -68,13 +67,13 @@ export class EditorCodeComponent implements OnInit {
   }
 
   openFile(fileName) {
-    const teArea = document.getElementById('codeeditor');
-    console.log(teArea);
-    console.log(this.codeConfig);
+    // const teArea = document.getElementById('codeeditor');
+    // console.log(teArea);
+    // console.log(this.codeConfig);
 
-    this.editor = CodeMirror.fromTextArea(teArea, this.codeConfig);
+    // this.editor = CodeMirror.fromTextArea(teArea, this.codeConfig);
     // this.editor = document.querySelector( '#codeeditor' );
-    console.log('codeeditor: ', this.editor);
+    // console.log('codeeditor: ', this.editor);
 
     console.log('fileNames: ', fileName);
     if (fileName === undefined) {
@@ -92,7 +91,7 @@ export class EditorCodeComponent implements OnInit {
       this.data.textContent = data;
 
       console.log(this.data.textContent);
-      this.editor.refresh();
+      // this.editor.refresh();
 
     });
   }

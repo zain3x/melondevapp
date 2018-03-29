@@ -27,30 +27,50 @@ export class AppComponent implements AfterViewInit {
     private componentFactoryResolver: ComponentFactoryResolver
   ) {
     this.config = {
-      content: [{
-          type: 'row',
-          content: [{
-            type: 'component',
-            componentName: 'code',
-            componentState: {
-              message: 'Top Left'
-            }
-          }, {
-            type: 'column',
-            content: [{
-              type: 'component',
-              componentName: 'properties',
-              componentState: {
-                message: 'Top Right'
-            }
+      content :
+      [{
+          type : 'row',
+          content :
+          [{
+              type : 'column',
+              content : [{
+                  type : 'component',
+                  componentName : 'preview',
+                  componentState : {
+                    message : 'Top Right'
+                  }
+                }, {
+                  type : 'component',
+                  componentName : 'properties',
+                  componentState : {
+                    message : 'Bottom Right'
+                  }
+                }
+              ]
             }, {
-              type: 'component',
-              componentName: 'properties',
-              componentState: {
-                message: 'Bottom Right'
+              type : 'component',
+              componentName : 'code',
+              componentState : {
+                message : 'Top Left'
               }
-            }]
-          }]
+            }, {
+              type : 'column',
+              content : [{
+                  type : 'component',
+                  componentName : 'properties',
+                  componentState : {
+                    message : 'Top Right'
+                  }
+                }, {
+                  type : 'component',
+                  componentName : 'properties',
+                  componentState : {
+                    message : 'Bottom Right'
+                  }
+                }
+              ]
+            }
+          ]
       }]
     };
   }
@@ -77,6 +97,19 @@ export class AppComponent implements AfterViewInit {
 
     this.layout.registerComponent('properties', (container, componentState) => {
       const factory = this.componentFactoryResolver.resolveComponentFactory(PanelPropetiesComponent);
+
+      // let compRef = this.viewContainer.createComponent(factory);
+      // compRef.instance.setEventHub(this.layout.eventHub);
+      // compRef.instance.message = componentState.message;
+      // container.getElement().append(compRef.location.nativeElement);
+
+      // container["compRef"] = compRef;
+
+      // compRef.changeDetectorRef.detectChanges();
+    });
+
+    this.layout.registerComponent('preview', (container, componentState) => {
+      const factory = this.componentFactoryResolver.resolveComponentFactory(PanelPreviewComponent);
 
       // let compRef = this.viewContainer.createComponent(factory);
       // compRef.instance.setEventHub(this.layout.eventHub);
