@@ -1,23 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Directive, ViewChild, AfterViewInit } from '@angular/core';
 
 import { CodeMirror } from 'codemirror';
 import { ElectronService } from 'ngx-electron';
 import { FsService } from 'ngx-fs';
+
+// @Directive({selector: 'editordirective'})
+// class EditorDirective {}
 
 @Component({
   selector: 'app-editor-code',
   templateUrl: './editor-code.component.html',
   styleUrls: ['./editor-code.component.css']
 })
-export class EditorCodeComponent implements OnInit {
+export class EditorCodeComponent implements OnInit, AfterViewInit {
 
-  codeContent: String = '(empty code)';
+  codeContent;
   projectDirectory;
-  editor: CodeMirror;
+
+  // @ViewChild(EditorDirective) editor: EditorDirective;
+  @ViewChild('editor') editor: any;
 
   codeConfig = {
     lineNumbers: true,
     autoRefresh: true,
+    width: '100%',
+    height: '100%',
     mode: 'javascript'
   };
 
@@ -38,10 +45,15 @@ export class EditorCodeComponent implements OnInit {
 
   ngOnInit() {
     console.log('ngOnInit()');
+    console.log(this.codeContent);
 
     const Menu = this._electronService.remote.Menu;
     const menu = Menu.buildFromTemplate(this.template);
     Menu.setApplicationMenu(menu);
+  }
+
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit()');
   }
 
   openFileDialog() {
@@ -87,11 +99,16 @@ export class EditorCodeComponent implements OnInit {
         console.log('Cannot read file', err);
         return;
       }
-      console.log(this.data.textContent);
-      this.data.textContent = data;
+      console.log(this.codeContent);
+      this.codeContent = data;
 
-      console.log(this.data.textContent);
-      // this.editor.refresh();
+      console.log(this.codeContent);
+      console.log(this.editor);
+      this.editor.instance.setSize('100%', '100%');
+      this.editor.instance.refresh();
+
+      // const cm = this.editor.instance;
+      // cm.refresh();
 
     });
   }

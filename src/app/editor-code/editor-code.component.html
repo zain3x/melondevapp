@@ -1,7 +1,7 @@
 <div fxLayout="column">
   <button fxFlex="20px" (click)="openFileDialog()">Open File</button>
   <div fxFlex>
-    <codemirror id="codeeditor" [(ngModel)]="codeContent" [config]="codeConfig"></codemirror>
+    <codemirror name="codeeditor" #editor [(ngModel)]="this.codeContent" [config]="codeConfig"></codemirror>
     <!-- <textarea id="codeeditor"></textarea> -->
   </div>
   <div fxFlex="5px">status: online</div>
