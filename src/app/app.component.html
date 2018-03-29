@@ -1,16 +1,5 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div class="fullframe" fxLayout="row">
-  <div fxFlex="20" fxLayout="column">
-    <button fxFlex="20px" (click)="openProjectDialog()">Open Project</button>
-    <div>
-      {{projectDirectory}}
-    </div>
-  </div>
-  <div fxFlex fxLayout="column">
-    <button fxFlex="20px" (click)="openFileDialog()">Open File</button>
-    <div *ngIf="codeContent" fxFlex>
-      <codemirror [(ngModel)]="codeContent" [config]="codeConfig"></codemirror>
-    </div>
-  </div>
+<div class="fullframe" id="layout" #layout fxFlex>
+  <!-- <h1>{{state?.label}}</h1> -->
+  <!-- <input type="text" [value]="state?.value || ''" (input)="onInput($event)"> -->
 </div>
-

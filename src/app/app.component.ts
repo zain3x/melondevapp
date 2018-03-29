@@ -1,84 +1,116 @@
-import { Component, OnInit } from '@angular/core';
-import { ElectronService } from 'ngx-electron';
-import { FsService } from 'ngx-fs';
+import {
+  Component, OnInit, Inject,
+  AfterViewInit, ComponentFactoryResolver, HostListener, ComponentFactory, ComponentRef, ViewContainerRef, ReflectiveInjector,
+  ElementRef, ViewChild
+} from '@angular/core';
+
 import 'codemirror/mode/javascript/javascript';
+import { EditorCodeComponent } from './editor-code/editor-code.component';
+import { PanelPreviewComponent } from './panel-preview/panel-preview.component';
+import { PanelPropetiesComponent } from './panel-propeties/panel-propeties.component';
+declare let GoldenLayout: any;
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
 
   title = 'Melon DevApp';
-  codeContent: string;
-  projectDirectory;
+  private config: any;
 
-  codeConfig = {
-    lineNumbers: true,
-    mode: 'javascript'
-  };
+  @ViewChild('layout') private layout: any;
 
-  data: any = {
-    textContent: '(empty code)'
-  };
-  template = [
-    {
-        label: 'Load Project'
-    }
-  ];
-
-  constructor(private _electronService: ElectronService, private _fsService: FsService) {}
+  constructor(
+    private el: ElementRef, private viewContainer: ViewContainerRef,
+    private componentFactoryResolver: ComponentFactoryResolver
+  ) {
+    this.config = {
+      content: [{
+          type: 'row',
+          content: [{
+            type: 'component',
+            componentName: 'code',
+            componentState: {
+              message: 'Top Left'
+            }
+          }, {
+            type: 'column',
+            content: [{
+              type: 'component',
+              componentName: 'properties',
+              componentState: {
+                message: 'Top Right'
+            }
+            }, {
+              type: 'component',
+              componentName: 'properties',
+              componentState: {
+                message: 'Bottom Right'
+              }
+            }]
+          }]
+      }]
+    };
+  }
 
   OnInit() {
-    const Menu = this._electronService.remote.Menu;
-    const menu = Menu.buildFromTemplate(this.template);
-    Menu.setApplicationMenu(menu);
   }
 
-  openFileDialog() {
-    const dialog = this._electronService.remote.dialog.showOpenDialog({properties: ['openFile']});
-    console.log(dialog);
-    this.openFile(dialog[0]);
-  }
+  /* Golden Layout */
+  ngAfterViewInit() {
+    this.layout = new GoldenLayout(this.config, this.layout.nativeElement);
 
-  openProjectDialog() {
-    const dialog = this._electronService.remote.dialog.showOpenDialog({properties: ['openDirectory']});
-    console.log(dialog);
-    this.openFile(dialog[0]);
-  }
+    this.layout.registerComponent('code', (container, componentState) => {
+      const factory = this.componentFactoryResolver.resolveComponentFactory(EditorCodeComponent);
 
-  openProject(dirPath) {
-    const fs = this._fsService.fs as any;
+      const compRef = this.viewContainer.createComponent(factory);
+      // compRef.instance.setEventHub(this.layout.eventHub);
+      // compRef.instance.message = componentState.message;
+      container.getElement().append(compRef.location.nativeElement);
 
-    fs.readdir(dirPath, (err, dir) => {
-      for (let i = 0, path; path = dir[i]; i++) {
-        console.log(path);
-      }
+      container['compRef'] = compRef;
+
+      // compRef.changeDetectorRef.detectChanges();
     });
-  }
 
-  openFile(fileName) {
-    console.log('fileNames: ', fileName);
-    if (fileName === undefined) {
-      console.log('No files were selected');
-      return;
-    }
+    this.layout.registerComponent('properties', (container, componentState) => {
+      const factory = this.componentFactoryResolver.resolveComponentFactory(PanelPropetiesComponent);
 
-    const fs = this._fsService.fs as any;
-    fs.readFile(fileName, 'utf-8', (err, data) => {
-      if (err) {
-        console.log('Cannot read file', err);
-        return;
-      }
-      console.log(this.data.textContent);
-      this.data.textContent = data;
+      // let compRef = this.viewContainer.createComponent(factory);
+      // compRef.instance.setEventHub(this.layout.eventHub);
+      // compRef.instance.message = componentState.message;
+      // container.getElement().append(compRef.location.nativeElement);
 
-      console.log(this.data.textContent);
+      // container["compRef"] = compRef;
 
-      this.codeContent = data;
-      this.codeContent = data;
+      // compRef.changeDetectorRef.detectChanges();
     });
+
+    this.layout.init();
+
+    // this.layout.on("itemDestroyed", item => {
+    //   if (item.container != null) {
+    //     let compRef = item.container["compRef"];
+    //     if (compRef != null) {
+    //       compRef.destroy();
+    //     }
+    //   }
+    // });
   }
+
+  // @HostListener('window:resize', ['$event'])
+  // onResize(event) {
+  //   if (this.layout) {
+  //     this.layout.updateSize();
+  //   }
+  // }
+
+  // sendEvent() {
+  //   if (this.layout) {
+  //     this.layout.eventHub.emit('someEvent');
+  //   }
+  // }
 
 }
